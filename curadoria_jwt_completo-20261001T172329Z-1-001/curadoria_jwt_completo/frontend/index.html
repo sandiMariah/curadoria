@@ -5,7 +5,36 @@
   <title>Curadoria JWT</title>
 </head>
 <body>
-  <h1>Curadoria JWT</h1>
-  <p>Frontend simples. Use Postman ou fetch para consumir a API.</p>
+  <h1>Listagemp</h1>
+  <p>Aqui esta todos os seus items cadastadros</p>
+
+  <script>
+
+    async function carregar_items(){
+
+      const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+      eyJpZCI6MywiZW1haWwiOiJtYXJpYWhAZW1haWwuY29tIiwiaWF0IjoxNzkwODgzNTAxLCJleHAiOjE3OTA4ODQ0MDF9.
+      fde3dBLV1bYbotC0ICvtwhI5MBQdnqF33QesAd_oms8`
+
+
+      const requisicao = await fetch('http://localhost:3001',
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearner ${token}`,
+            'Content-Type': `application/json` // indica que espera/envia JSON
+          }
+        }
+      );
+
+      if(!requisicao.ok){
+        return "Algo deu errado";
+
+      }
+      
+      let dados = await requisicao.json();
+      
+    }
+  </script>
 </body>
 </html>
