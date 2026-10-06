@@ -2,26 +2,56 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Curadoria JWT</title>
+  <title>Curadoria</title>
 </head>
 <body>
-  <h1>Listagemp</h1>
+  <h1>Listagem</h1>
   <p>Aqui esta todos os seus items cadastadros</p>
+  <div id="items">
+
 
   <script>
 
+    let global_token
+
+    async function login(){
+      const dados_login ={
+
+        "email": "laispinhares@gmail.com",
+        "password": "1234"
+      }
+
+      const requisicao = await fetch(
+        'http://localhost:3001/auth/login',
+
+         {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dados_login)
+        
+        }
+
+      )
+      
+      if(!requisicao.ok){
+        return 1 
+      }
+
+      const resposta = await requisicao.json();
+      global_token = resposta.accessToken;
+      console.log(global_token);
+      
+    }
+
     async function carregar_items(){
 
-      const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
-      eyJpZCI6MywiZW1haWwiOiJtYXJpYWhAZW1haWwuY29tIiwiaWF0IjoxNzkwODgzNTAxLCJleHAiOjE3OTA4ODQ0MDF9.
-      fde3dBLV1bYbotC0ICvtwhI5MBQdnqF33QesAd_oms8`
-
-
-      const requisicao = await fetch('http://localhost:3001',
+      const requisicao = await fetch('http://localhost:3001/items/',
         {
           method: 'GET',
           headers: {
-            'Authorization': `Bearner ${token}`,
+            'Authorization': `Bearer ${global_token}`,
             'Content-Type': `application/json` // indica que espera/envia JSON
           }
         }
@@ -33,8 +63,27 @@
       }
       
       let dados = await requisicao.json();
+      console.log(JSON.stringify(dados));
+      
+
+      const div_items = document.getElementById("items");
+      div_items.innerHTML = dados.map(item => `
+        <h1 style="color: #E36D98";">${item.title}</h3>
+          <h4><a href='${item.url}'> ${item.url}</a></h2>
+        <h3> ${item.notes}</h2>
+          <h3>${item.tags}</h2>
+      `)
       
     }
+ async function inicio(){
+  await login();
+  await carregar_items();
+ }
+  
+
+ inicio();
   </script>
+
+
 </body>
 </html>
